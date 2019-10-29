@@ -38,7 +38,12 @@ namespace DRhoddlio
                 }
                 x++;
             }
-            gameBoard = new GImageArray(this, gameBoardArr, 0, 0, 7, 7, 5, "C:/Users/b9026473/source/repos/DRhoddlio/DRhoddlio/images/");
+            gameBoardArr[3, 3] = 1;
+            gameBoardArr[3, 4] = 0;
+            gameBoardArr[4, 4] = 1;
+            gameBoardArr[4, 3] = 0;
+
+            gameBoard = new GImageArray(this, gameBoardArr, 150, 0, 7, 7, 5, "C:/Users/b9026473/source/repos/DRhoddlio/DRhoddlio/images/");
             gameBoard.Which_Element_Clicked += new GImageArray.ImageClickedEventHandler(Which_Element_Clicked);
         }
 
