@@ -51,8 +51,9 @@ namespace DRhoddlio
         {
             int col = gameBoard.Get_Col(sender);
             int row = gameBoard.Get_Row(sender);
+            gameBoardArr[row, col] = 1;
 
-            MessageBox.Show(row + " " + col);
+            gameBoard.UpDateImages(gameBoardArr);
         }
     }
 }
