@@ -65,6 +65,7 @@ namespace DRhoddlio
             int col = gameBoard.Get_Col(sender);
             int row = gameBoard.Get_Row(sender);
 
+            MessageBox.Show(col.ToString() + row.ToString());
             //Determines current player based on the label for the current player, sets the appropriate value and then changes to the other player's turn
             if (currentPlayer1.Visible == true)
             {
@@ -114,112 +115,95 @@ namespace DRhoddlio
             int curCol;
             int curRow;
             bool isAdjToOpp = false;
+            bool isAdjToSelf = false;
+            bool isYourPieceOnRow = false;
+            List<List<int>> boardPiecesToChange;
+
 
             int i = 0;
-            while (i + 1 < dirToCheckArr.Length)
+            while (i < dirToCheckArr.Length / 2)
             {
+                boardPiecesToChange = new List<List<int>>();
                 curCol = initCol;
                 curRow = initRow;
+                isAdjToOpp = false;
 
                 curCol = curCol + dirToCheckArr[i, 0];
                 curRow = curRow + dirToCheckArr[i, 1];
-                MessageBox.Show(curCol.ToString() + "" + curRow.ToString());
 
-                if (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
+                int currentVal = gameBoardArr[curRow, curCol];
+
+                if (currentPlayer1.Visible) //White
                 {
-                    if (currentPlayer == 0)
+                    if (currentVal == 0)
                     {
-                        if (gameBoardArr[curCol, curRow] == 1)
-                        {
-                            isAdjToOpp = true;
-                        }
-
+                        isAdjToOpp = true;
                     }
-                    else if (currentPlayer == 1)
+                }
+                else if (currentPlayer0.Visible) //Black
+                {
+                    if (currentVal == 1)
                     {
-                        if (gameBoardArr[curCol, curRow] == 0)
-                        {
-                            isAdjToOpp = true;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Big Wrong because there isnt a current player");
+                        isAdjToOpp = true;
                     }
                 }
 
                 if (isAdjToOpp == true)
                 {
-
-
-
-                    bool playerCounterBeforeWhiteSpace = false;
-                    List<List<int>> currentOppInDir = new List<List<int>>();
-
-                    while (curCol > 0 && curRow > 0 && curCol < 8 && curRow < 8 && isAdjToOpp == true)
+                    List<int> listToAdd = new List<int>();
+                    while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
                     {
-                        currentOppInDir = new List<List<int>>();
-                        playerCounterBeforeWhiteSpace = false;
+                        currentVal = gameBoardArr[curCol, curRow];
+                        if (currentVal != 10)
+                        {
+                            if (currentPlayer1.Visible)
+                            {
+                                if (currentVal == 0)
+                                {
+                                    listToAdd.Add(curRow);
+                                    listToAdd.Add(curCol);
+
+                                    boardPiecesToChange.Add(listToAdd);
+                                }
+                                if (currentVal == 1)
+                                {
+                                    int index = 0;
+                                    while (index < boardPiecesToChange.Count)
+                                    {
+                                        gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 1;
+                                        index++;
+                                    }
+                                    gameBoardArr[initRow, initCol] = 1;
+                                    gameBoard.UpDateImages(gameBoardArr);
+                                }
+                            }
+                            else if (currentPlayer0.Visible)
+                            {
+                                if (currentVal == 1)
+                                {
+                                    listToAdd.Add(curRow);
+                                    listToAdd.Add(curCol);
+
+                                    boardPiecesToChange.Add(listToAdd);
+                                }
+                                if (currentVal == 0)
+                                {
+                                    int index = 0;
+                                    while (index + 1 < boardPiecesToChange.Count)
+                                    {
+                                        gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 0;
+                                        index++;
+                                    }
+                                    gameBoardArr[initRow, initCol] = 0;
+                                    gameBoard.UpDateImages(gameBoardArr);
+                                }
+                            }
+                        }
+                        MessageBox.Show(curCol.ToString() + curRow.ToString());
                         curCol = curCol + dirToCheckArr[i, 0];
                         curRow = curRow + dirToCheckArr[i, 1];
-                        int valToCheck = gameBoardArr[curCol, curRow];
-
-                        if (valToCheck != 10)
-                        {
-                            if (currentPlayer == 0)
-                            {
-                                if (valToCheck == 1)
-                                {
-                                    List<int> listToAdd = new List<int> { curRow, curCol };
-                                    currentOppInDir.Add(listToAdd);
-                                }
-                                else if (valToCheck == 0)
-                                {
-                                    playerCounterBeforeWhiteSpace = true;
-                                }
-                            }
-                            else if (currentPlayer == 1)
-                            {
-                                if (valToCheck == 0)
-                                {
-                                    List<int> listToAdd = new List<int> { curRow, curCol };
-                                    currentOppInDir.Add(listToAdd);
-                                }
-                                else if (valToCheck == 1)
-                                {
-                                    playerCounterBeforeWhiteSpace = true;
-                                }
-                            }
-                        }
+                        MessageBox.Show(curCol.ToString() + curRow.ToString());
                     }
-
-                    if (playerCounterBeforeWhiteSpace == true)
-                    {
-                        int index = 0;
-                        while (index < currentOppInDir.Count)
-                        {
-                            int colToChange = currentOppInDir[i][0];
-                            int rowToChange = currentOppInDir[i][1];
-                            if (currentPlayer == 0)
-                            {
-                                gameBoardArr[colToChange, rowToChange] = 0;
-                            }
-                            else if (currentPlayer == 1)
-                            {
-                                gameBoardArr[colToChange, rowToChange] = 1;
-                            }
-                        }
-
-                        if (currentPlayer == 0)
-                        {
-                            gameBoardArr[initCol, initRow] = 0;
-                        }
-                        else if (currentPlayer == 1)
-                        {
-                            gameBoardArr[initCol, initRow] = 1;
-                        }
-                    }
-                    
                 }
                 i++;
             }
