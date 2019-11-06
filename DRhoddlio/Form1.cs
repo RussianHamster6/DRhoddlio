@@ -75,6 +75,7 @@ namespace DRhoddlio
             }
             else
             {
+
                 isValidMove(sender, 0);
                 currentPlayer0.Visible = false;
                 currentPlayer1.Visible = true;
@@ -115,8 +116,6 @@ namespace DRhoddlio
             int curCol;
             int curRow;
             bool isAdjToOpp = false;
-            bool isAdjToSelf = false;
-            bool isYourPieceOnRow = false;
             List<List<int>> boardPiecesToChange;
 
 
@@ -150,14 +149,15 @@ namespace DRhoddlio
 
                 if (isAdjToOpp == true)
                 {
-                    List<int> listToAdd = new List<int>();
                     while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
                     {
+                        List<int> listToAdd = new List<int>();
                         currentVal = gameBoardArr[curCol, curRow];
                         if (currentVal != 10)
                         {
                             if (currentPlayer1.Visible)
                             {
+
                                 if (currentVal == 0)
                                 {
                                     listToAdd.Add(curRow);
@@ -179,6 +179,7 @@ namespace DRhoddlio
                             }
                             else if (currentPlayer0.Visible)
                             {
+
                                 if (currentVal == 1)
                                 {
                                     listToAdd.Add(curRow);
@@ -189,9 +190,9 @@ namespace DRhoddlio
                                 if (currentVal == 0)
                                 {
                                     int index = 0;
-                                    while (index + 1 < boardPiecesToChange.Count)
+                                    while (index < boardPiecesToChange.Count)
                                     {
-                                        gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 0;
+                                        gameBoardArr[boardPiecesToChange[index][1], boardPiecesToChange[index][0]] = 0;
                                         index++;
                                     }
                                     gameBoardArr[initRow, initCol] = 0;
