@@ -65,23 +65,8 @@ namespace DRhoddlio
             int col = gameBoard.Get_Col(sender);
             int row = gameBoard.Get_Row(sender);
 
-            MessageBox.Show(col.ToString() + row.ToString());
             //Determines current player based on the label for the current player, sets the appropriate value and then changes to the other player's turn
-            if (currentPlayer1.Visible == true)
-            {
-                isValidMove(sender, 1);
-                currentPlayer1.Visible = false;
-                currentPlayer0.Visible = true;
-            }
-            else
-            {
-
-                isValidMove(sender, 0);
-                currentPlayer0.Visible = false;
-                currentPlayer1.Visible = true;
-            }
-            //Updates the images in the board with the new values. 
-            gameBoard.UpDateImages(gameBoardArr);
+            isValidMove(sender);
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -107,106 +92,135 @@ namespace DRhoddlio
             currentPlayer1.Visible = true;
         }
 
-        private void isValidMove(object sender, int currentPlayer)
+        private void isValidMove(object sender)
         {
+            //Creates the array with the directions that need to be checked.
             int[,] dirToCheckArr = new int[8, 2] { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
 
+            //Sets the variables that are going to be used and need to be reset once the function is called. 
             int initCol = gameBoard.Get_Col(sender);
             int initRow = gameBoard.Get_Row(sender);
             int curCol;
             int curRow;
             bool isAdjToOpp = false;
+            bool piecesChanged = false;
             List<List<int>> boardPiecesToChange;
 
-
+            //While loop to check for the oppPiece in each direction 
             int i = 0;
             while (i < dirToCheckArr.Length / 2)
             {
+                //Create a new list of boardPiecesToChange as a 2D list of ints in order to add values to later
                 boardPiecesToChange = new List<List<int>>();
+                //Set the current XY of the cell as the clicked XY
                 curCol = initCol;
                 curRow = initRow;
+                //Set isAdjToOpp to false because if it was left true it would check all the cells in the game from the cell clicked
                 isAdjToOpp = false;
 
+                //Make the XY increment in the direction it is going for the check
                 curCol = curCol + dirToCheckArr[i, 0];
                 curRow = curRow + dirToCheckArr[i, 1];
 
-                int currentVal = gameBoardArr[curRow, curCol];
+                //Error handling to ensure the curCol and curRow are not out of bounds of the array
+                if (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
+                {
+                    //Gets the current value of the cell that is being checked
+                    int currentVal = gameBoardArr[curRow, curCol];
 
-                if (currentPlayer1.Visible) //White
-                {
-                    if (currentVal == 0)
+                    //Checks if white or black player is the one who is playing
+                    if (currentPlayer1.Visible) //White
                     {
-                        isAdjToOpp = true;
-                    }
-                }
-                else if (currentPlayer0.Visible) //Black
-                {
-                    if (currentVal == 1)
-                    {
-                        isAdjToOpp = true;
-                    }
-                }
-
-                if (isAdjToOpp == true)
-                {
-                    while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
-                    {
-                        List<int> listToAdd = new List<int>();
-                        currentVal = gameBoardArr[curRow, curCol];
-                        if (currentVal != 10)
+                        //Checks if the opp piece is next to the clicked cell
+                        if (currentVal == 0)
                         {
-                            if (currentPlayer1.Visible)
-                            {
-
-                                if (currentVal == 0)
-                                {
-                                    listToAdd.Add(curRow);
-                                    listToAdd.Add(curCol);
-
-                                    boardPiecesToChange.Add(listToAdd);
-                                }
-                                if (currentVal == 1)
-                                {
-                                    int index = 0;
-                                    while (index < boardPiecesToChange.Count)
-                                    {
-                                        gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 1;
-                                        index++;
-                                    }
-                                    gameBoardArr[initRow, initCol] = 1;
-                                    gameBoard.UpDateImages(gameBoardArr);
-                                }
-                            }
-                            else if (currentPlayer0.Visible)
-                            {
-
-                                if (currentVal == 1)
-                                {
-                                    listToAdd.Add(curRow);
-                                    listToAdd.Add(curCol);
-
-                                    boardPiecesToChange.Add(listToAdd);
-                                }
-                                if (currentVal == 0)
-                                {
-                                    int index = 0;
-                                    while (index < boardPiecesToChange.Count)
-                                    {
-                                        gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 0;
-                                        index++;
-                                    }
-                                    gameBoardArr[initRow, initCol] = 0;
-                                    gameBoard.UpDateImages(gameBoardArr);
-                                }
-                            }
+                            isAdjToOpp = true;
                         }
-                        MessageBox.Show(curCol.ToString() + curRow.ToString());
-                        curCol = curCol + dirToCheckArr[i, 0];
-                        curRow = curRow + dirToCheckArr[i, 1];
-                        MessageBox.Show(curCol.ToString() + curRow.ToString());
+                    }
+                    //Same code but for black
+                    else //Black
+                    {
+                        if (currentVal == 1)
+                        {
+                            isAdjToOpp = true;
+                        }
+                    }
+
+                    if (isAdjToOpp == true)
+                    {
+                        //Now checks all the values in the same direction that there is an adjecet piece to 
+                        while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
+                        {
+                            List<int> listToAdd = new List<int>();
+                            currentVal = gameBoardArr[curRow, curCol];
+                            if (currentVal != 10)
+                            {
+                                if (currentPlayer1.Visible)
+                                {
+
+                                    if (currentVal == 0)
+                                    {
+                                        listToAdd.Add(curRow);
+                                        listToAdd.Add(curCol);
+
+                                        boardPiecesToChange.Add(listToAdd);
+                                    }
+                                    else
+                                    {
+                                        int index = 0;
+                                        while (index < boardPiecesToChange.Count)
+                                        {
+                                            gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 1;
+                                            index++;
+                                        }
+                                        gameBoardArr[initRow, initCol] = 1;
+                                        gameBoard.UpDateImages(gameBoardArr);
+                                        piecesChanged = true;
+                                    }
+                                }
+                                else
+                                {
+
+                                    if (currentVal == 1)
+                                    {
+                                        listToAdd.Add(curRow);
+                                        listToAdd.Add(curCol);
+
+                                        boardPiecesToChange.Add(listToAdd);
+                                    }
+                                    else
+                                    {
+                                        int index = 0;
+                                        while (index < boardPiecesToChange.Count)
+                                        {
+                                            gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 0;
+                                            index++;
+                                        }
+                                        gameBoardArr[initRow, initCol] = 0;
+                                        gameBoard.UpDateImages(gameBoardArr);
+                                        piecesChanged = true;
+                                    }
+                                }
+                            }
+                            curCol = curCol + dirToCheckArr[i, 0];
+                            curRow = curRow + dirToCheckArr[i, 1];
+                        }
                     }
                 }
                 i++;
+            }
+            if(piecesChanged == true)
+            {
+                if (currentPlayer0.Visible == true)
+                {
+                    currentPlayer0.Visible = false;
+                    currentPlayer1.Visible = true;
+                }
+                else
+                {
+                    currentPlayer1.Visible = false;
+                    currentPlayer0.Visible = true;
+                }
             }
         }
     }
