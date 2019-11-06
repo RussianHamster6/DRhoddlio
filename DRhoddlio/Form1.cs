@@ -152,7 +152,7 @@ namespace DRhoddlio
                     while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
                     {
                         List<int> listToAdd = new List<int>();
-                        currentVal = gameBoardArr[curCol, curRow];
+                        currentVal = gameBoardArr[curRow, curCol];
                         if (currentVal != 10)
                         {
                             if (currentPlayer1.Visible)
