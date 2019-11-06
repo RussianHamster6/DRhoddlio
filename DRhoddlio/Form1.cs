@@ -192,7 +192,7 @@ namespace DRhoddlio
                                     int index = 0;
                                     while (index < boardPiecesToChange.Count)
                                     {
-                                        gameBoardArr[boardPiecesToChange[index][1], boardPiecesToChange[index][0]] = 0;
+                                        gameBoardArr[boardPiecesToChange[index][0], boardPiecesToChange[index][1]] = 0;
                                         index++;
                                     }
                                     gameBoardArr[initRow, initCol] = 0;
