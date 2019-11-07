@@ -26,9 +26,7 @@ namespace DRhoddlio
         public Form1()
         {
             InitializeComponent();
-            //Set the images in the GUI
-            pictureBox2.Image = Image.FromFile(imagesDir + "0.png");
-            pictureBox3.Image = Image.FromFile(imagesDir + "1.png");
+            
         }
 
         public void populateGameBoardList()
@@ -272,6 +270,14 @@ namespace DRhoddlio
             }
             player0Score.Text = "x" + bScore.ToString();
             player1Score.Text = "x" + wScore.ToString();
+        }
+
+        //Shows the about form when clicked
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            infoForm newForm = new infoForm();
+
+            newForm.Show();
         }
     }
 }
