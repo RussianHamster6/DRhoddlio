@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +40,8 @@
             this.bPlayerTxt = new System.Windows.Forms.TextBox();
             this.currentPlayer1 = new System.Windows.Forms.Label();
             this.currentPlayer0 = new System.Windows.Forms.Label();
+            this.player1Score = new System.Windows.Forms.Label();
+            this.player0Score = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -101,14 +102,16 @@
             this.wPlayerTxt.Enabled = false;
             this.wPlayerTxt.Location = new System.Drawing.Point(95, 77);
             this.wPlayerTxt.Name = "wPlayerTxt";
-            this.wPlayerTxt.Size = new System.Drawing.Size(256, 20);
+            this.wPlayerTxt.Size = new System.Drawing.Size(178, 20);
             this.wPlayerTxt.TabIndex = 2;
             // 
             // pictureBox2
             // 
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.Window;
+            this.pictureBox2.ErrorImage = null;
             this.pictureBox2.ImageLocation = "C:\\Users\\b9026473\\Source\\Repos\\RussianHamster6\\DRhoddlio\\DRhoddlio\\bin\\Debug\\imag" +
     "es\\1.png";
-            this.pictureBox2.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.InitialImage")));
+            this.pictureBox2.InitialImage = null;
             this.pictureBox2.Location = new System.Drawing.Point(50, 67);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(39, 44);
@@ -118,9 +121,11 @@
             // 
             // pictureBox3
             // 
+            this.pictureBox3.BackColor = System.Drawing.SystemColors.Desktop;
+            this.pictureBox3.ErrorImage = null;
             this.pictureBox3.ImageLocation = "C:\\Users\\b9026473\\Source\\Repos\\RussianHamster6\\DRhoddlio\\DRhoddlio\\bin\\Debug\\imag" +
     "es\\0.png";
-            this.pictureBox3.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.InitialImage")));
+            this.pictureBox3.InitialImage = null;
             this.pictureBox3.Location = new System.Drawing.Point(449, 67);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(39, 44);
@@ -133,7 +138,7 @@
             this.bPlayerTxt.Enabled = false;
             this.bPlayerTxt.Location = new System.Drawing.Point(494, 77);
             this.bPlayerTxt.Name = "bPlayerTxt";
-            this.bPlayerTxt.Size = new System.Drawing.Size(256, 20);
+            this.bPlayerTxt.Size = new System.Drawing.Size(191, 20);
             this.bPlayerTxt.TabIndex = 5;
             // 
             // currentPlayer1
@@ -156,11 +161,37 @@
             this.currentPlayer0.Text = "CURRENT PLAYER";
             this.currentPlayer0.Visible = false;
             // 
+            // player1Score
+            // 
+            this.player1Score.AutoSize = true;
+            this.player1Score.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.player1Score.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.player1Score.Location = new System.Drawing.Point(292, 67);
+            this.player1Score.Name = "player1Score";
+            this.player1Score.Size = new System.Drawing.Size(49, 31);
+            this.player1Score.TabIndex = 8;
+            this.player1Score.Text = "x2 ";
+            this.player1Score.Visible = false;
+            // 
+            // player0Score
+            // 
+            this.player0Score.AutoSize = true;
+            this.player0Score.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.player0Score.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.player0Score.Location = new System.Drawing.Point(706, 67);
+            this.player0Score.Name = "player0Score";
+            this.player0Score.Size = new System.Drawing.Size(49, 31);
+            this.player0Score.TabIndex = 9;
+            this.player0Score.Text = "x2 ";
+            this.player0Score.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 569);
+            this.Controls.Add(this.player0Score);
+            this.Controls.Add(this.player1Score);
             this.Controls.Add(this.currentPlayer0);
             this.Controls.Add(this.currentPlayer1);
             this.Controls.Add(this.bPlayerTxt);
@@ -196,6 +227,8 @@
         private System.Windows.Forms.TextBox bPlayerTxt;
         private System.Windows.Forms.Label currentPlayer1;
         private System.Windows.Forms.Label currentPlayer0;
+        private System.Windows.Forms.Label player1Score;
+        private System.Windows.Forms.Label player0Score;
     }
 }
 

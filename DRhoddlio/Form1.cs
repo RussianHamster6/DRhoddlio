@@ -65,8 +65,14 @@ namespace DRhoddlio
             int col = gameBoard.Get_Col(sender);
             int row = gameBoard.Get_Row(sender);
 
-            //Determines current player based on the label for the current player, sets the appropriate value and then changes to the other player's turn
-            isValidMove(sender);
+            //Check to see if cell clicked has not been clicked before
+            int curVal = gameBoardArr[row, col];
+
+            if (curVal != 10)
+            {
+                isValidMove(sender);
+                calcScore();
+            }
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -90,6 +96,8 @@ namespace DRhoddlio
             bPlayerTxt.Text = playerBName;
             wPlayerTxt.Text = playerWName;
             currentPlayer1.Visible = true;
+            player0Score.Visible = true;
+            player1Score.Visible = true;
         }
 
         private void isValidMove(object sender)
@@ -148,23 +156,28 @@ namespace DRhoddlio
 
                     if (isAdjToOpp == true)
                     {
+                        bool flag = false;
                         //Now checks all the values in the same direction that there is an adjecet piece to 
-                        while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8)
+                        while (curRow >= 0 && curCol >= 0 && curRow < 8 && curCol < 8 && flag == false)
                         {
-                            List<int> listToAdd = new List<int>();
+                            //Grabs the currentValue of the cell that is being checked
                             currentVal = gameBoardArr[curRow, curCol];
+                            //Checks to ensure that the current value is not an empty cell
                             if (currentVal != 10)
                             {
-                                if (currentPlayer1.Visible)
+                                if (currentPlayer1.Visible)//White
                                 {
-
+                                    //If the current cell is the players value add the row and colum and adds the row and column to the list of pieces to flip
                                     if (currentVal == 0)
                                     {
+                                        //Creates a list int that is used to add into the 2D list of all the pieces to flip
+                                        List<int> listToAdd = new List<int>();
                                         listToAdd.Add(curRow);
                                         listToAdd.Add(curCol);
 
                                         boardPiecesToChange.Add(listToAdd);
                                     }
+                                    //The piece will be the same as your own colour and therefore flips all the values in the pieces to change arr
                                     else
                                     {
                                         int index = 0;
@@ -178,11 +191,12 @@ namespace DRhoddlio
                                         piecesChanged = true;
                                     }
                                 }
-                                else
+                                else //Black
                                 {
-
+                                    //As above but for black
                                     if (currentVal == 1)
                                     {
+                                        List<int> listToAdd = new List<int>();
                                         listToAdd.Add(curRow);
                                         listToAdd.Add(curCol);
 
@@ -202,6 +216,12 @@ namespace DRhoddlio
                                     }
                                 }
                             }
+                            //Sets the flag to true so that no more cells are checked reducing the amount of CPU time the algorithm takes up
+                            else
+                            {
+                                flag = true;
+                            }
+                            //Increments the cell that is going to be checked
                             curCol = curCol + dirToCheckArr[i, 0];
                             curRow = curRow + dirToCheckArr[i, 1];
                         }
@@ -209,6 +229,7 @@ namespace DRhoddlio
                 }
                 i++;
             }
+            //Changes the player turn if pieces have been flipped
             if(piecesChanged == true)
             {
                 if (currentPlayer0.Visible == true)
@@ -222,6 +243,35 @@ namespace DRhoddlio
                     currentPlayer0.Visible = true;
                 }
             }
+        }
+
+        //Calculates the current score for each of the players
+        private void calcScore()
+        {
+            int wScore = 0;
+            int bScore = 0;
+
+            int x = 0;
+            while (x < 8)
+            {
+                y = 0;
+                while (y < 8)
+                {
+                    int curVal = gameBoardArr[x, y];
+                    if (curVal == 0)
+                    {
+                        bScore++;
+                    }
+                    else if (curVal == 1)
+                    {
+                        wScore++;
+                    }
+                    y++;
+                }
+                x++;
+            }
+            player0Score.Text = "x" + bScore.ToString();
+            player1Score.Text = "x" + wScore.ToString();
         }
     }
 }
