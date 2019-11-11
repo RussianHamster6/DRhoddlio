@@ -18,6 +18,7 @@ namespace DRhoddlio
         //assigning variables 
         int x = 0;
         int y = 0;
+        bool boardMade = false;
         public int[,] gameBoardArr;
         GImageArray gameBoard;
         //Setting the directory that the images can be found in for the array and the GUI
@@ -31,8 +32,12 @@ namespace DRhoddlio
 
         public void populateGameBoardList()
         {
-            //Crate a new array for the game board
-            gameBoardArr = new int[8, 8];
+            if (gameBoardArr == null)
+            {
+                //Crate a new array for the game board
+                gameBoardArr = new int[8, 8];
+            }
+            
             //Loop round all the rows and columnds setting the values to 10 for the default picture
             while (x < 8)
             {
@@ -51,8 +56,11 @@ namespace DRhoddlio
             gameBoardArr[4, 4] = 1;
             gameBoardArr[4, 3] = 0;
 
+
             //Loads the gameBoard array and creates a GImageArray object under the variable of gameBoard
             gameBoard = new GImageArray(this, gameBoardArr, 150, 0, 7, 7, 5, imagesDir);
+
+            gameBoard.UpDateImages(gameBoardArr);
             //Create an event handler for when a cell in the game board is clicked. 
             gameBoard.Which_Element_Clicked += new GImageArray.ImageClickedEventHandler(Which_Element_Clicked);
         }
@@ -66,8 +74,9 @@ namespace DRhoddlio
             //Check to see if cell clicked has not been clicked before
             int curVal = gameBoardArr[row, col];
 
-            if (curVal != 10)
+            if (curVal == 10)
             {
+
                 isValidMove(sender);
                 calcScore();
             }
@@ -89,11 +98,38 @@ namespace DRhoddlio
                 playerBName = My_Dialogs.InputBox("Enter the Black player's name");
             }
             
-            //runs the command to populate the game board and then sets the player names to be the appropriate players before indicating that white starts the game. 
-            populateGameBoardList();
+            //runs the command to populate the game board and then sets the player names to be the appropriate players before indicating that white starts the game.
+            if (boardMade == false)
+            {
+                populateGameBoardList();
+                boardMade = true;
+            }
+            else
+            {
+                int x = 0;
+                while (x < 8)
+                {
+                    y = 0;
+                    while (y < 8)
+                    {
+
+                        gameBoardArr[x, y] = 10;
+                        y++;
+                    }
+                    x++;
+                }
+                //Sets the values for the four middle counters in the field.
+                gameBoardArr[3, 3] = 1;
+                gameBoardArr[3, 4] = 0;
+                gameBoardArr[4, 4] = 1;
+                gameBoardArr[4, 3] = 0;
+
+                gameBoard.UpDateImages(gameBoardArr);
+            }
             bPlayerTxt.Text = playerBName;
             wPlayerTxt.Text = playerWName;
             currentPlayer1.Visible = true;
+            currentPlayer0.Visible = false;
             player0Score.Visible = true;
             player1Score.Visible = true;
         }
@@ -279,5 +315,117 @@ namespace DRhoddlio
 
             newForm.Show();
         }
+
+        //When save game clicked
+        private void saveGameToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            //Checks if there is a game loaded
+            if (gameBoardArr == null)
+            {
+                MessageBox.Show("you need to have a game to save it");
+            }
+            else
+            {
+                //Sets the path for the saveGames
+                string path = Directory.GetCurrentDirectory() + "\\saveGames\\";
+                //sets name of new file
+                path = path + My_Dialogs.InputBox("Game Name:") + ".txt";
+
+                //Creates the file 
+                FileStream fs = File.Create(path);
+                //Loops through and saves the rows with spaces between the values that would be in the columns and ,'s separating the rows
+                int x = 0;
+                while (x < 8)
+                {
+                    string textToWrite = "";
+                    int y = 0;
+                    while (y < 8)
+                    {
+                        textToWrite = textToWrite + gameBoardArr[x, y].ToString() + " ";
+                        y++;
+                    }
+                    byte[] bdata = Encoding.Default.GetBytes(textToWrite + ",");
+                    fs.Write(bdata, 0, bdata.Length);
+                    x++;
+                }
+                //Adds the player names
+                byte[] playerNames = Encoding.Default.GetBytes(wPlayerTxt.Text + "," + bPlayerTxt.Text + ",");
+                fs.Write(playerNames, 0, playerNames.Length);
+
+                //Adds the current player value
+                if (currentPlayer0.Visible)
+                {
+                    byte[] bData = Encoding.Default.GetBytes("0");
+                    fs.Write(bData, 0, bData.Length);
+                }
+                else
+                {
+                    byte[] bData = Encoding.Default.GetBytes("1");
+                    fs.Write(bData, 0, bData.Length);
+                }
+
+                fs.Close();
+            }
+        }
+
+        //LoadGame clicked
+        private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Checks to see if there is already a gameBoard initialised if not creates a new gameBoard and loads or if not just loads
+            if (gameBoardArr == null)
+            {
+                populateGameBoardList();
+                loadGame();
+            }
+            else
+            {
+                loadGame();
+            }
+        }
+
+        //Load game function
+        private void loadGame()
+        {
+            //Opens a file Dialog to select the game 
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.InitialDirectory = Directory.GetCurrentDirectory() + "\\saveGames\\";
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var sr = new StreamReader(fileDialog.FileName);
+                string readString = sr.ReadToEnd();
+                string[] readArr = readString.Split(',');
+
+                int x = 0;
+                while (x < 8)
+                {
+                    string[] strToAddArr = readArr[x].Split(' ');
+                    int y = 0;
+
+                    while (y < 8)
+                    {
+                        gameBoardArr[x, y] = int.Parse(strToAddArr[y]);
+                        y++;
+                    }
+                    x++;
+                }
+                gameBoard.UpDateImages(gameBoardArr);
+
+                wPlayerTxt.Text = readArr[8];
+                bPlayerTxt.Text = readArr[9];
+
+                if (readArr[10] == "0")
+                {
+                    currentPlayer0.Visible = true;
+                    currentPlayer1.Visible = false;
+                }
+                else
+                {
+                    currentPlayer1.Visible = true;
+                    currentPlayer0.Visible = false;
+                }
+            }
+        }
+
     }
 }
